@@ -1,7 +1,7 @@
+import bs4
+import requests
 import pandas as pd
 import codecs
-import requests
-import bs4
 
 
 class Crawl:
@@ -31,11 +31,19 @@ class Crawl:
         switch_mode = {"post": "parser_post()", 'like': 'parser_file_like()'}
         self.mode = switch_mode[self.mode]
 
+    # To crawl who posted to the page according to files
+    # '.html''s from the page on Facebook.
+    # Example:
+    # In the page named 'GXVN' I request a file '.html' from Facebook
+    # Then I use 'parser_post' function to find who posted on that Facebook page.
+    # The function will return 2 list:
+    #   1. Links to Facebook user's profile who have been posting to Facebook page.
+    #   2. Their name.
     def parser_post(self):
         soup = self.read_file()
         links = soup.findAll('div', class_="qzhwtbm6 knvmm38d")
-        Links = [l.find('a', 
-                class_="oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl oo9gr5id gpro0wi8 lrazzd5p") for l in links]
+        Links = [l.find('a',
+                        class_="oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl oo9gr5id gpro0wi8 lrazzd5p") for l in links]
         link = []
         name = []
         for l in Links:
@@ -56,8 +64,9 @@ class Crawl:
         #box = soup.findAll('div',class_="card__text")
         # Tìm link trong nó nếu có
         links = soup.find('div',
-                          class_="a8s20v7p k5wvi7nf buofh1pr pfnyh3mw l9j0dhe7 du4w35lb")
-        links = links.findAll('a', class_="oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl oo9gr5id gpro0wi8 lrazzd5p")
+        class_="a8s20v7p k5wvi7nf buofh1pr pfnyh3mw l9j0dhe7 du4w35lb")
+        links = links.findAll('a', 
+        class_="oajrlxb2 g5ia77u1 qu0x051f esr5mh6w e9989ue4 r7d6kgcz rq0escxv nhd2j8a9 nc684nl6 p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso i1ao9s8h esuyzwwr f1sip0of lzcic4wl oo9gr5id gpro0wi8 lrazzd5p")
         if len(links) > 0:
             link = [l.find('a').get("href") for l in links]
             get_true_string(link)
@@ -74,7 +83,8 @@ def get_csv(listCrawl):
     for i in range(len(listCrawl)):
         data1 = data1.append(listCrawl[i])
     filename = input("Nhap vao file name: ")
-    result = data1.to_csv('Data/' + filename + ".csv", header=True, index=None)
+    result = data1.to_csv('/home/lahai/Crawl/Data/' +
+                          filename + ".csv", header=True, index=None)
     return result
 
 
@@ -104,6 +114,7 @@ def get_Crawl(lists):
 
 
 if __name__ == "__main__":
-    lists = ["GXVN1.html"]
+    lists = ["GXVN13.html"]
     listCrawl = list(get_Crawl(lists))
     result = get_csv(listCrawl)
+    print("Done")
