@@ -2,7 +2,7 @@ import bs4
 import requests
 import pandas as pd
 import codecs
-
+import os
 
 class Crawl:
 
@@ -82,8 +82,10 @@ def get_csv(listCrawl):
     data1 = listCrawl[0]
     for i in range(len(listCrawl)):
         data1 = data1.append(listCrawl[i])
+    path = os.getcwd() + '/data'
+    print(path)
     filename = input("Nhap vao file name: ")
-    result = data1.to_csv('/home/lahai/Crawl/Data/' +
+    result = data1.to_csv(path + '/' +
                           filename + ".csv", header=True, index=None)
     return result
 
@@ -103,18 +105,26 @@ def get_df(Crawl):
     return data
 
 
-def get_Crawl(lists):
+def get_Crawl(path):
     mode = input("Nhap vao kieu can quet")
-    for url in lists:
+    """for url in lists:
         crawl = Crawl(url, mode)
         crawl.get_mode()
         eval('crawl.' + crawl.mode)
         data = get_df(crawl)
         yield data
-
-
+"""
+    for folder, subfolder, files in os.walk(path):
+        for file in files:
+            url = path + '/' + file
+            crawl = Crawl(url,mode)
+            crawl.get_mode()
+            eval('crawl.'+crawl.mode)
+            data=get_df(crawl)
+            yield data
 if __name__ == "__main__":
     lists = ["GXVN13.html"]
-    listCrawl = list(get_Crawl(lists))
+    path = os.getcwd() + '/src'
+    listCrawl = list(get_Crawl(path))
     result = get_csv(listCrawl)
     print("Done")
